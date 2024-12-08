@@ -168,7 +168,8 @@ class Magazine:
             if count > 2:
                 contributing_authors.append(author)
         return contributing_authors or None
-
+        
+    #this method isn't working quite well because I got stuck
     @classmethod
     def top_publisher(cls):
         # This is to check if there are no magazines
