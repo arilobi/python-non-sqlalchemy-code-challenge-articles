@@ -12,11 +12,11 @@ class Article:
         # I'm using ValueError to ensure that the correct value according to the conditions is passed. The same applies to TypeError if the type is incorrect.
 
         if not isinstance(title, str) or not 5 <= len(title) <= 50:
-            raise ValueError("Titles must be between 5 and 50 characters.")
+            return ValueError("Titles must be between 5 and 50 characters.")
         if not isinstance(author, Author):
-            raise TypeError("author must be of type Author")
+            return TypeError("author must be of type Author")
         if not isinstance(magazine, Magazine):
-            raise TypeError("magazine must be of type Magazine")
+            return TypeError("magazine must be of type Magazine")
 
         # appending the articles to both author and magazine
         author.articles().append(self)
@@ -33,11 +33,11 @@ class Article:
     def author(self):
         return self._author
 
-    # Setting it by using the setter method so that the authors can be able to be changed
+    # Setting it by using the setter method so that the authors can be able to be changed (value)
     @author.setter
     def author(self, value):
         if not isinstance(value, Author):
-            raise TypeError("author must be of type Author")
+            return TypeError("author must be of type Author")
         self._author = value
 
     @property
@@ -48,13 +48,13 @@ class Article:
     @magazine.setter
     def magazine(self, value):
         if not isinstance(value, Magazine):
-            raise TypeError("magazine must be of type Magazine")
+            return TypeError("magazine must be of type Magazine")
         self._magazine = value
 
 class Author:
     def __init__(self, name):
         if not isinstance(name, str) or len(name) == 0:
-            raise ValueError("Names must be longer than 0 characters")
+            return ValueError("Names must be longer than 0 characters")
         self._name = name
         self._articles = []
 
@@ -80,7 +80,7 @@ class Author:
         article = Article(self, magazine, title)
 
         # appending the new article to the original articles
-        self._articles.append(article)
+        
         return article
 
     # adding topics / categories that the author chooses to focus on.
@@ -98,9 +98,9 @@ class Magazine:
     # Conditions to be met
     def __init__(self, name, category):
         if not isinstance(name, str) or not 2 <= len(name) <= 16:
-            raise ValueError("Names must be between 2 and 16 characters.")
+            return ValueError("Names must be between 2 and 16 characters.")
         if not isinstance(category, str) or len(category) == 0:
-            raise ValueError("Categories must be longer than 0 characters.")
+            return ValueError("Categories must be longer than 0 characters.")
 
         self._name = name
         self._category = category
@@ -116,7 +116,7 @@ class Magazine:
     @name.setter
     def name(self, value):
         if not isinstance(value, str) or not 2 <= len(value) <= 16:
-            raise ValueError("Names must be between 2 and 16 characters")
+            return ValueError("Names must be between 2 and 16 characters")
         self._name = value
 
     @property
@@ -126,7 +126,7 @@ class Magazine:
     @category.setter
     def category(self, value):
         if not isinstance(value, str) or len(value) == 0:
-            raise ValueError("Categories must be longer than 0 characters.")
+            return ValueError("Categories must be longer than 0 characters.")
         self._category = value
 
     def articles(self):
@@ -167,9 +167,11 @@ class Magazine:
             # if the author has written more than 2 articles, they will be added to the list and if they have less than 2 articles, they won't be added.
             if count > 2:
                 contributing_authors.append(author)
-        return contributing_authors or None
-        
-    #this method isn't working quite well because I got stuck
+  
+
+        return contributing_authors 
+
+    # Unfortunately, I don't think this code works because it's unfinished.
     @classmethod
     def top_publisher(cls):
         # This is to check if there are no magazines
@@ -182,3 +184,51 @@ class Magazine:
             articles_count = len(magazine.articles())
 
         return max_magazine
+
+
+author1 = Author("Carry Bradshaw") 
+author2 = Author("Nathaniel Hawthorne") 
+magazine1 = Magazine("Vogue", "Fashion") 
+magazine2 = Magazine("AD", "Architecture") 
+
+# Add articles 
+article1 = author1.add_article(magazine1, "How to wear a tutu with style") 
+article2 = author2.add_article(magazine2, "2023 Eccentric Design Trends") 
+article4 = author1.add_article(magazine1, "Dating life in NYC") 
+article6 = author1.add_article(magazine1, "Best Restaurants in NYC")
+
+
+# PRINTING
+#\n means breaking a line for better formatting
+
+# Print all articles
+print("All Articles:\n")
+for article in Article.all:
+    print(f"Article Title: {article.title}, Author: {article.author.name}, Magazine: {article.magazine.name}")
+
+# Print contributors to a magazine 
+print("\nContributors to", magazine1.name + ":\n")
+for contributor in magazine1.contributors():
+    print(contributor.name)
+
+# Print article titles in a magazine
+print("\nArticles in", magazine1.name + ":\n")
+for title in magazine1.article_titles():
+    print(title)
+
+# Print the magazines an author has contributed to
+print("\nMagazines", author1.name, "has contributed to:\n")
+for magazine in author1.magazines():
+    print(magazine.name)
+
+# Print the topic areas
+print("\nTopic Areas", author1.name, "has written about:\n")
+for topic in author1.topic_areas():
+    print(topic)
+
+# print authors who have written more than 2 articles
+print("\nContributing Authors who have written more than 2 articles in", magazine1.name + ":\n")
+for contributor in magazine1.contributing_authors():
+    print(contributor.name)
+
+
